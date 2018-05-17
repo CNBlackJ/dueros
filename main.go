@@ -38,7 +38,7 @@ func waitToken() {
 	if err == nil {
 		return
 	}
-	fmt.Println("open browser, type: http://pi.local:8080/login")
+	fmt.Println("open browser, type: http://127.0.0.1:8080/login")
 	ticker := time.NewTicker(time.Second * 3)
 	defer ticker.Stop()
 	for range ticker.C {
@@ -58,7 +58,7 @@ func main() {
 	waitToken()
 
 	duer.OS = duer.NewDuerOS(iface.DefaultRegistry)
-	wakeup := NewWakeupListener(*wakeupMethod)
+	wakeup := NewWakeupListener("keyboard")
 	player := audio.NewPlayer()
 	voiceInput := iface.DefaultRegistry.GetService("ai.dueros.device_interface.voice_input").(*iface.VoiceInput)
 	for {

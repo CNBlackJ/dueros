@@ -1,0 +1,5 @@
+storage
+.vscode
+*.log
+.idea/
+token.json

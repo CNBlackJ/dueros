@@ -18,14 +18,16 @@ var (
 	// 百度oauth服务器url
 	oauthUrl = "https://openapi.baidu.com/oauth/2.0/authorize"
 
-	redirectUri = "http://pi.local:8080/authresponse"
+	redirectUri = "http://127.0.0.1:8080/authresponse"
 
 	tokenFile = "token.json"
 )
 
 var (
-	clientID     = flag.String("client_id", "", "client id of oauth")
-	clientSecret = flag.String("client_secret", "", "client secret of oauth")
+	// clientID     = flag.String("client_id", "7vel18yfmolnNpwaS4PWywde5T2OaDtA", "client id of oauth")
+	// clientSecret = flag.String("client_secret", "kBv3SLMlC1UUdmmOZizjb9AxGTjFk9DX", "client secret of oauth")
+	clientID     = flag.String("client_id", "1pgtGGwj5T0NoSO3z4YhYGUkEDkwwDA5", "client id of oauth")
+	clientSecret = flag.String("client_secret", "EOuzGi78iO9yyGfRqWzoxU0i79tK2Q00", "client secret of oauth")
 	accessToken  = flag.String("access_token", "", "access token of oauth, if not empty, client_id and client_secret can leave empty")
 )
 

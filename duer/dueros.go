@@ -11,11 +11,14 @@ import (
 	"net/http"
 	"net/textproto"
 	"path"
+	"strings"
 	"time"
 
+	// "github.com/tidwall/gjson"
 	"github.com/icexin/dueros/auth"
 	"github.com/icexin/dueros/proto"
 	"github.com/twinj/uuid"
+	"github.com/yanyiwu/gojieba"
 )
 
 const (
@@ -52,6 +55,7 @@ type DuerOS struct {
 	directch chan *proto.Message
 
 	registry Registry
+	isSpeak  chan int
 }
 
 func NewDuerOS(r Registry) *DuerOS {
@@ -67,12 +71,22 @@ func NewDuerOS(r Registry) *DuerOS {
 		eventch:  make(chan *proto.Message, 2),
 		directch: make(chan *proto.Message, 2),
 		registry: r,
+		isSpeak:  make(chan int),
 	}
 	go d.handleDownChannelLoop()
 	go d.handlePingLoop()
 	go d.handleEventLoop()
 	go d.handleDirectLoop()
 	return d
+}
+
+func stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+			if b == a {
+					return true
+			}
+	}
+	return false
 }
 
 func (d *DuerOS) handlePingLoop() {
@@ -132,6 +146,15 @@ func (d *DuerOS) ping() {
 	resp.Close()
 }
 
+func (d *DuerOS) stringInSlice(a string, list []string) bool {
+	for _, b := range list {
+		if b == a {
+			return true
+		}
+	}
+	return false
+}
+
 func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 	defer resp.Close()
 	for {
@@ -143,6 +166,38 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 			log.Printf("%#v", err)
 			continue
 		}
+		if direct.PayloadJSON.Get("type").String() == "FINAL" {
+			inputText := direct.PayloadJSON.Get("text")
+	
+			var s string
+			var words []string
+			use_hmm := true
+			x := gojieba.NewJieba()
+			defer x.Free()
+		
+			s = inputText.String()
+			words = x.Cut(s, use_hmm)
+			fmt.Println(s)
+			fmt.Println("全模式匹配:", strings.Join(words, "/"))
+			if stringInSlice("天气", words) {
+				fmt.Println("===+启动天气服务+===")
+				d.isSpeak <- 0
+			} else {
+				d.isSpeak <- 1
+			}
+			if stringInSlice("美食", words) {
+				fmt.Println("===+启动美食服务+===")
+				d.isSpeak <- 0
+			}
+			if stringInSlice("景点", words) {
+				fmt.Println("===+启动景点服务+===")
+				d.isSpeak <- 0
+			}
+			if stringInSlice("休闲", words) {
+				fmt.Println("===+启动休闲服务+===")
+				d.isSpeak <- 0
+			}
+		}
 		log.Printf("directive: %s.%s:%s ", direct.Header.Namespace, direct.Header.Name, direct.PayloadJSON)
 		if direct.Header.Namespace == "ai.dueros.device_interface.voice_output" &&
 			direct.Header.Name == "Speak" {
@@ -152,7 +207,10 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 				continue
 			}
 			buf := new(bytes.Buffer)
-			io.Copy(buf, rc)
+			isSpeak := <- d.isSpeak
+			if isSpeak == 1 {
+				io.Copy(buf, rc)
+			}
 			rc.Close()
 			direct.Attach = ioutil.NopCloser(buf)
 		}
@@ -182,7 +240,7 @@ func (d *DuerOS) postEvent(e *proto.Message) (*proto.ResponseReader, error) {
 		"event":         e,
 	}
 	buf, _ := json.Marshal(msg)
-	log.Printf("request:%s", buf)
+	log.Printf("==request:%s", buf)
 
 	pr, pw := io.Pipe()
 	w := multipart.NewWriter(pw)

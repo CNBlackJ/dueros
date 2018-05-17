@@ -3,6 +3,7 @@ package iface
 import (
 	"fmt"
 
+	// "github.com/icexin/dueros/duer"
 	"github.com/icexin/dueros/proto"
 )
 
@@ -14,7 +15,12 @@ func (s *Screen) RenderVoiceInputText(m *proto.Message) error {
 	if m.PayloadJSON.Get("type").String() == "FINAL" {
 		fmt.Println("\n>>> 倾听完毕")
 	}
+	
+	return nil
+}
 
+func (s *Screen) ViewHtml(m *proto.Message) error {
+	fmt.Printf("hello view html.")
 	return nil
 }
 
