@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func TourismService() {
+func SceneService() {
 	fmt.Println("===+启动景点服务+===")
-	fmt.Println("It tourism service!")
+	fmt.Println("It scene service!")
 }

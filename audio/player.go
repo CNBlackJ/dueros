@@ -52,12 +52,10 @@ func (p *Player) TranslateToText(fn string) (text string, err error) {
 	return
 }
 
-func (p *Player) ShowText(text string) (err error) {
-	host := "http://192.168.1.67"
+func (p *Player) ShowText(text string, path string) (err error) {
+	host := "http://192.168.64.1"
 	port := "8080"
-	path := "weather?weather="
 	url := fmt.Sprintf("%s:%s/%s%s", host, port, path, text)
-	fmt.Println(url)
 	open.Start(url)
 	return
 }
@@ -72,29 +70,43 @@ func stringInSlice(a string, list []string) bool {
 }
 
 func (p *Player) LoadMP3Reader(r io.Reader) (*Writer, error) {
-	// save file
+	var fn string
+	isTranslate := false
 	timeUnix := time.Now().Unix()
-	folder := "./storage"
-	fn := fmt.Sprintf("%s/mofun%d.mp3", folder, timeUnix)
+
+	// 根据不同的定制服务，返回不同的录音；如：美食/出行
+	kw := utils.GetKeyword()
+	if kw == "美食" {
+		path := "food/"
+		p.ShowText("为你找到以下内容：", path)
+		fn = "./resource/base_vioce/content.mp3"
+	} else if kw == "景点" {
+		path := "scene/"
+		p.ShowText("为你找到多个相关地点，请选择：", path)
+		fn = "./resource/base_vioce/place.mp3"
+	} else if kw == "休闲" {
+		path := "casual/"
+		p.ShowText("为你找到多个相关地点，请选择：", path)
+		fn = "./resource/base_vioce/place.mp3"
+	} else {
+		isTranslate = true
+		fn = fmt.Sprintf("./storage/mofun%d.mp3", timeUnix)
+	}
+
 	buf := new(bytes.Buffer)
 	io.Copy(buf, r)
 	buf.ReadFrom(r)
 	ioutil.WriteFile(fn, buf.Bytes(), 0644)
 
-	kw := utils.GetKeyword()
-	fmt.Println("==keyword==")
-	fmt.Println(kw)
-
-	// transfer to wav
-	outFn, _ := p.TransferToWav(fn, folder, timeUnix)
-
-	// 根据不同的定制服务，返回不同的录音；如：美食/出行
-
-	// translate to text
-	text, _ := p.TranslateToText(outFn)
-
-	// call api to show text
-	p.ShowText(text)
+	if isTranslate {
+		folder := "./storage"
+		// transfer to wav
+		outFn, _ := p.TransferToWav(fn, folder, timeUnix)
+		// translate to text
+		text, _ := p.TranslateToText(outFn)
+		path := ""
+		p.ShowText(text, path)
+	}
 
 	return p.loadMP3File(fn)
 }

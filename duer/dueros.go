@@ -188,7 +188,7 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 				d.isSpeak <- 0
 			} else if stringInSlice("景点", words) {
 				utils.SetKeyword("景点")
-				service.TourismService()
+				service.SceneService()
 				d.isSpeak <- 0
 			} else if stringInSlice("休闲", words) {
 				utils.SetKeyword("休闲")
