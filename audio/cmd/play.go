@@ -5,7 +5,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/icexin/dueros-go/audio"
+	"github.com/icexin/dueros/audio"
 )
 
 func main() {
