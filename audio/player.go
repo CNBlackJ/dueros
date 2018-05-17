@@ -81,6 +81,10 @@ func (p *Player) LoadMP3Reader(r io.Reader) (*Writer, error) {
 	buf.ReadFrom(r)
 	ioutil.WriteFile(fn, buf.Bytes(), 0644)
 
+	kw := utils.GetKeyword()
+	fmt.Println("==keyword==")
+	fmt.Println(kw)
+
 	// transfer to wav
 	outFn, _ := p.TransferToWav(fn, folder, timeUnix)
 

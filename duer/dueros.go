@@ -15,10 +15,11 @@ import (
 	"time"
 
 	"dueros/utils"
+	"dueros/service"
 
 	// "github.com/tidwall/gjson"
-	"github.com/icexin/dueros/auth"
-	"github.com/icexin/dueros/proto"
+	"dueros/auth"
+	"dueros/proto"
 	"github.com/twinj/uuid"
 	"github.com/yanyiwu/gojieba"
 )
@@ -168,7 +169,6 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 			log.Printf("%#v", err)
 			continue
 		}
-		utils.SetKeyword("天气aa")
 		if direct.PayloadJSON.Get("type").String() == "FINAL" {
 			inputText := direct.PayloadJSON.Get("text")
 	
@@ -180,30 +180,24 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 		
 			s = inputText.String()
 			words = x.Cut(s, use_hmm)
-			fmt.Println(s)
 			fmt.Println("全模式匹配:", strings.Join(words, "/"))
-			if stringInSlice("天气", words) {
-				fmt.Println("===+启动天气服务+===")
+		 
+			if stringInSlice("美食", words) {
+				utils.SetKeyword("美食")
+				service.FoodService()
+				d.isSpeak <- 0
+			} else if stringInSlice("景点", words) {
+				utils.SetKeyword("景点")
+				service.TourismService()
+				d.isSpeak <- 0
+			} else if stringInSlice("休闲", words) {
+				utils.SetKeyword("休闲")
+				service.CasualService()
 				d.isSpeak <- 0
 			} else {
 				d.isSpeak <- 1
 			}
-			if stringInSlice("美食", words) {
-				fmt.Println("===+启动美食服务+===")
-				d.isSpeak <- 0
-			}
-			if stringInSlice("景点", words) {
-				fmt.Println("===+启动景点服务+===")
-				d.isSpeak <- 0
-			}
-			if stringInSlice("休闲", words) {
-				fmt.Println("===+启动休闲服务+===")
-				d.isSpeak <- 0
-			}
 		}
-		kw := utils.GetKeyword()
-		fmt.Println("====keyword====")
-		fmt.Println(kw)
 		log.Printf("directive: %s.%s:%s ", direct.Header.Namespace, direct.Header.Name, direct.PayloadJSON)
 		if direct.Header.Namespace == "ai.dueros.device_interface.voice_output" &&
 			direct.Header.Name == "Speak" {

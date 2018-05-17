@@ -6,7 +6,7 @@ import (
 	"io"
 
 	snowboy "github.com/brentnd/go-snowboy"
-	"github.com/icexin/dueros/audio"
+	"dueros/audio"
 )
 
 var (

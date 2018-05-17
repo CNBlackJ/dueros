@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/icexin/dueros/audio"
-	"github.com/icexin/dueros/auth"
-	"github.com/icexin/dueros/duer"
-	"github.com/icexin/dueros/iface"
+	"dueros/audio"
+	"dueros/auth"
+	"dueros/duer"
+	"dueros/iface"
 )
 
 var (

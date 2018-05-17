@@ -3,9 +3,9 @@ package iface
 import (
 	"time"
 
-	"github.com/icexin/dueros/audio"
-	"github.com/icexin/dueros/duer"
-	"github.com/icexin/dueros/proto"
+	"dueros/audio"
+	"dueros/duer"
+	"dueros/proto"
 	"github.com/tidwall/gjson"
 )
 

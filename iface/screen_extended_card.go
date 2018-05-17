@@ -3,7 +3,7 @@ package iface
 import (
 	"fmt"
 
-	"github.com/icexin/dueros/proto"
+	"dueros/proto"
 )
 
 type ScreenExtendedCard struct {

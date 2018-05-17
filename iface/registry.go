@@ -5,7 +5,7 @@ import (
 	"log"
 	"reflect"
 
-	"github.com/icexin/dueros/proto"
+	"dueros/proto"
 )
 
 var (

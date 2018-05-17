@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/icexin/dueros/audio"
-	"github.com/icexin/dueros/duer"
-	"github.com/icexin/dueros/proto"
+	"dueros/audio"
+	"dueros/duer"
+	"dueros/proto"
 	uuid "github.com/satori/go.uuid"
 )
 

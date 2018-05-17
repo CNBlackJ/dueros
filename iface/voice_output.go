@@ -1,8 +1,8 @@
 package iface
 
 import (
-	"github.com/icexin/dueros/audio"
-	"github.com/icexin/dueros/proto"
+	"dueros/audio"
+	"dueros/proto"
 )
 
 type VoiceOutput struct {

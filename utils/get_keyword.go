@@ -4,15 +4,13 @@ import (
 	"fmt"
 )
 
-var KeyWord chan string
+var KeyWord string
 
-func SetKeyword (kw string) string {
+func SetKeyword (kw string) {
 	fmt.Println(kw)
-	KeyWord <- kw
+	KeyWord = kw
 }
 
 func GetKeyword () string {
-	kw := <- KeyWord
-	fmt.Println(kw)
-	return kw 
+	return KeyWord 
 }

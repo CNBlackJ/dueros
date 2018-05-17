@@ -3,8 +3,8 @@ package iface
 import (
 	"fmt"
 
-	// "github.com/icexin/dueros/duer"
-	"github.com/icexin/dueros/proto"
+	// "dueros/duer"
+	"dueros/proto"
 )
 
 type Screen struct {
