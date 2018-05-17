@@ -53,7 +53,7 @@ func (p *Player) TranslateToText(fn string) (text string, err error) {
 }
 
 func (p *Player) ShowText(text string, path string) (err error) {
-	host := "http://192.168.64.1"
+	host := "http://192.168.1.66"
 	port := "8080"
 	url := fmt.Sprintf("%s:%s/%s%s", host, port, path, text)
 	open.Start(url)
@@ -77,17 +77,21 @@ func (p *Player) LoadMP3Reader(r io.Reader) (*Writer, error) {
 	// 根据不同的定制服务，返回不同的录音；如：美食/出行
 	kw := utils.GetKeyword()
 	if kw == "美食" {
-		path := "food/"
+		path := "optimization_list?type=eat"
 		p.ShowText("为你找到以下内容：", path)
 		fn = "./resource/base_vioce/content.mp3"
 	} else if kw == "景点" {
-		path := "scene/"
+		path := "optimization_list?type=play"
 		p.ShowText("为你找到多个相关地点，请选择：", path)
 		fn = "./resource/base_vioce/place.mp3"
 	} else if kw == "休闲" {
-		path := "casual/"
+		path := "optimization_list?type=play"
 		p.ShowText("为你找到多个相关地点，请选择：", path)
 		fn = "./resource/base_vioce/place.mp3"
+	} else if kw == "心情" {
+		path := "emotion?emoticons=happy"
+		p.ShowText("只要看到你，我就什么事都没有了。", path)
+		fn = "./resource/base_vioce/emotion.mp3"
 	} else {
 		isTranslate = true
 		fn = fmt.Sprintf("./storage/mofun%d.mp3", timeUnix)

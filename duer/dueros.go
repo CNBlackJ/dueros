@@ -194,6 +194,10 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 				utils.SetKeyword("休闲")
 				service.CasualService()
 				d.isSpeak <- 0
+			} else if stringInSlice("心情", words) {
+				utils.SetKeyword("心情")
+				service.CasualService()
+				d.isSpeak <- 0
 			} else {
 				d.isSpeak <- 1
 			}
