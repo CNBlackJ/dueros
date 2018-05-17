@@ -14,6 +14,8 @@ import (
 	"strings"
 	"time"
 
+	"dueros/utils"
+
 	// "github.com/tidwall/gjson"
 	"github.com/icexin/dueros/auth"
 	"github.com/icexin/dueros/proto"
@@ -166,6 +168,7 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 			log.Printf("%#v", err)
 			continue
 		}
+		utils.SetKeyword("天气aa")
 		if direct.PayloadJSON.Get("type").String() == "FINAL" {
 			inputText := direct.PayloadJSON.Get("text")
 	
@@ -198,6 +201,9 @@ func (d *DuerOS) handleResponse(resp *proto.ResponseReader) {
 				d.isSpeak <- 0
 			}
 		}
+		kw := utils.GetKeyword()
+		fmt.Println("====keyword====")
+		fmt.Println(kw)
 		log.Printf("directive: %s.%s:%s ", direct.Header.Namespace, direct.Header.Name, direct.PayloadJSON)
 		if direct.Header.Namespace == "ai.dueros.device_interface.voice_output" &&
 			direct.Header.Name == "Speak" {
